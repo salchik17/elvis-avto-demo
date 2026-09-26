@@ -246,6 +246,12 @@ input[type=range]{width:100%;accent-color:var(--red);height:44px}
 /* REVIEWS */
 .revs{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 20px 20px;margin:40px -20px 0;scrollbar-width:none}
 .revs::-webkit-scrollbar{display:none}
+.revs-nav{display:none;gap:10px;justify-content:flex-end}
+.revs-nav button{width:48px;height:48px;border-radius:50%;border:1.5px solid #3a3a42;background:transparent;color:var(--text);font-size:26px;line-height:1;cursor:pointer;transition:background .2s,border-color .2s,opacity .2s}
+.revs-nav button:hover:not(:disabled){background:var(--red);border-color:var(--red)}
+.revs-nav button:disabled{opacity:.3;cursor:default}
+@media(pointer:fine){.revs-nav{display:flex}.revs{cursor:grab}}
+.revs.drag{scroll-snap-type:none;cursor:grabbing;user-select:none}
 .rev{flex:0 0 min(380px,84vw);scroll-snap-align:center;background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:28px;display:flex;flex-direction:column}
 .rev__stars{color:var(--red);letter-spacing:3px}
 .rev blockquote{margin:14px 0 20px;font-size:16px;color:#dedee3;flex:1}

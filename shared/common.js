@@ -148,6 +148,19 @@ function initHockey(root) {
 function initReviews(root) {
   root.innerHTML = REVIEWS.map(r => `<figure class="rev"><div class="rev__stars">★★★★★</div><blockquote>${U.esc(r.text)}</blockquote>
     <figcaption><b>${U.esc(r.name)}</b>${r.date ? `<span>${r.date}</span>` : ''}</figcaption></figure>`).join('');
+  // На компьютере: стрелки и перетаскивание мышью (на телефоне листается пальцем)
+  const nav = document.createElement('div'); nav.className = 'revs-nav';
+  nav.innerHTML = '<button type="button" aria-label="Предыдущий отзыв">‹</button><button type="button" aria-label="Следующий отзыв">›</button>';
+  root.after(nav);
+  const [prev, next] = nav.children, step = () => (root.firstElementChild ? root.firstElementChild.offsetWidth : 300) + 16;
+  prev.onclick = () => root.scrollBy({ left: -step(), behavior: 'smooth' });
+  next.onclick = () => root.scrollBy({ left: step(), behavior: 'smooth' });
+  const upd = () => { prev.disabled = root.scrollLeft < 5; next.disabled = root.scrollLeft + root.clientWidth > root.scrollWidth - 5; };
+  root.addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd();
+  let x0 = null, s0 = 0;
+  root.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse' || e.button) return; x0 = e.clientX; s0 = root.scrollLeft; root.classList.add('drag'); e.preventDefault(); });
+  addEventListener('pointermove', e => { if (x0 !== null) root.scrollLeft = s0 - (e.clientX - x0); });
+  addEventListener('pointerup', () => { if (x0 === null) return; x0 = null; root.classList.remove('drag'); });
 }
 function initFaq(root) {
   root.innerHTML = FAQ.map(([q, a]) => `<details class="faq"><summary>${U.esc(q)}</summary><p>${U.esc(a)}</p></details>`).join('');
