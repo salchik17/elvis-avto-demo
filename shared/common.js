@@ -123,7 +123,7 @@ function initHockey(root) {
     <div class="hk__vs">
       <div class="hk__team"><div class="hk__badge hk__badge--home">СФ</div><b>${m.home}</b><small>${m.homeCity}</small></div>
       <div class="hk__mid">VS</div>
-      <div class="hk__team"><div class="hk__badge hk__badge--us"><img src="../shared/logo.svg" alt="Элвис Авто"></div><b>${m.away}</b><small>${m.awayCity}</small></div>
+      <div class="hk__team"><div class="hk__badge hk__badge--us"><img src="../shared/logo-mark.svg" alt="Элвис Авто"></div><b>${m.away}</b><small>${m.awayCity}</small></div>
     </div>
     <div class="hk__info"><div><small>Когда</small><b>${m.dateText}</b></div><div><small>Где</small><b>${m.arena}</b><span>${m.arenaCity}</span></div></div>
     <div class="hk__timer" id="hkTimer"></div>

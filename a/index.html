@@ -7,9 +7,9 @@
 <meta name="description" content="Автосалон «Элвис Авто», Мурманск: новые автомобили и авто с пробегом, авто на заказ из любой страны, выкуп, кредит.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#0a0a0b">
-<link rel="icon" href="https://elvis-avto.ru/res/favicons/favicon-32x32.png">
+<link rel="icon" type="image/svg+xml" href="../shared/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="../shared/img/slides/s1-mercedes.jpg">
 <style>
 :root{--bg:#0a0a0b;--bg2:#141417;--bg3:#1c1c21;--line:#26262c;--text:#f5f5f7;--muted:#9a9aa2;--red:#FD0D1B;--red2:#ff4450;--r:22px;--nav:64px}
@@ -37,6 +37,8 @@ section{position:relative}
 .nav.solid{background:rgba(10,10,11,.78);backdrop-filter:saturate(1.4) blur(16px);-webkit-backdrop-filter:saturate(1.4) blur(16px);border-color:var(--line)}
 .nav .wrap{height:100%;display:flex;align-items:center;gap:28px}
 .logo img{height:38px;width:auto}
+.logo__svg{height:36px;width:auto;display:block;overflow:visible}
+@media(max-width:700px){.logo__svg{height:30px}}
 .menu{display:flex;gap:26px;font-size:14px;font-weight:500;color:#c7c7cc;margin-left:auto}
 .menu a:hover{color:#fff}
 .nav__tel{font-weight:700;font-size:15px}
@@ -313,7 +315,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 
 <header class="nav" id="nav">
   <div class="wrap">
-    <a class="logo" href="#top" aria-label="Элвис Авто"><img src="../shared/logo-white.svg" alt="Элвис Авто" width="62" height="38"></a>
+    <a class="logo" href="#top" aria-label="Элвис Авто"><svg class="logo__svg" viewBox="-7.9 1.0 674.2 133.0" role="img" aria-label="Элвис Авто"><g class="all"><g transform="translate(-17.21 17.20) scale(0.9561)"><g><path d="M24.54 24.54 A36 36 0 1 1 24.54 75.46" fill="none" stroke="#FD0D1B" stroke-width="15"></path><line x1="31.97" y1="31.97" x2="36.92" y2="36.92" stroke="#fff" stroke-width="3" stroke-linecap="round"></line><line x1="45.03" y1="24.99" x2="45.81" y2="28.91" stroke="#fff" stroke-width="2.2" stroke-linecap="round"></line><line x1="59.76" y1="26.44" x2="57.08" y2="32.91" stroke="#fff" stroke-width="3" stroke-linecap="round"></line><line x1="71.2" y1="35.83" x2="67.88" y2="38.06" stroke="#fff" stroke-width="2.2" stroke-linecap="round"></line><line x1="75.5" y1="50" x2="68.5" y2="50" stroke="#fff" stroke-width="3" stroke-linecap="round"></line><line x1="71.2" y1="64.17" x2="67.88" y2="61.94" stroke="#fff" stroke-width="2.2" stroke-linecap="round"></line><line x1="59.76" y1="73.56" x2="57.08" y2="67.09" stroke="#fff" stroke-width="3" stroke-linecap="round"></line><line x1="45.03" y1="75.01" x2="45.81" y2="71.09" stroke="#fff" stroke-width="2.2" stroke-linecap="round"></line><line x1="31.97" y1="68.03" x2="36.92" y2="63.08" stroke="#fff" stroke-width="3" stroke-linecap="round"></line><g class="ndl" transform="rotate(0 50 50)"><path d="M16 50 L50 44.5 L58.8 50 L50 55.5Z" fill="#fff"></path></g><ellipse cx="50" cy="53" rx="12" ry="6" fill="#111"></ellipse><rect x="38" y="47" width="24" height="6" fill="#111"></rect><ellipse cx="50" cy="47" rx="12" ry="6" fill="#3a3a3a" stroke="rgba(255,255,255,.7)" stroke-width="1.2"></ellipse></g></g><text x="74.75121951219512" y="100" font-family="'Russo One'" font-weight="400" font-size="100" fill="#fff">ЛВИС<tspan dx="30" fill="#FD0D1B">АВТО</tspan></text></g></svg></a>
     <nav class="menu" id="menu">
       <a href="#catalog">Автомобили</a><a href="#order">Под заказ</a><a href="#buyout">Выкуп</a><a href="#credit">Кредит</a><a href="#hockey">Хоккей</a><a href="#reviews">Отзывы</a><a href="#contact">Контакты</a>
     </nav>
@@ -472,6 +474,19 @@ initAll();
 // Меню
 const nav = U.$('#nav');
 U.$('#burger').onclick = () => nav.classList.toggle('open');
+
+// Логотип: стрелка спидометра делает «разгон» при загрузке и при наведении
+(function () {
+  const g = U.$('.logo__svg .ndl'); if (!g || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let run = false;
+  const rev = () => { if (run) return; run = true; const t0 = performance.now();
+    (function f(now) { const t = Math.min(1, (now - t0) / 1500), up = t < .45 ? 1 - Math.pow(1 - t / .45, 3) : 1 - (t - .45) / .55,
+      wob = t < .5 ? 0 : Math.sin((t - .5) * 30) * 6 * (1 - t);
+      g.setAttribute('transform', 'rotate(' + (200 * up + wob).toFixed(2) + ' 50 50)');
+      if (t < 1) requestAnimationFrame(f); else { g.setAttribute('transform', 'rotate(0 50 50)'); run = false; } })(t0); };
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => setTimeout(rev, 600));
+  U.$('.logo').addEventListener('mouseenter', rev);
+})();
 U.$$('#menu a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
 const onScroll = () => nav.classList.toggle('solid', scrollY > 40);
 addEventListener('scroll', onScroll, { passive: true }); onScroll();
