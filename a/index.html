@@ -16,6 +16,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
 html.locked,html.locked body{overflow:hidden}
+[id]{scroll-margin-top:var(--nav)}
 body{background:var(--bg);color:var(--text);font:16px/1.55 Manrope,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 img{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
@@ -482,7 +483,7 @@ addEventListener('scroll', onScroll, { passive: true }); onScroll();
 <script>
 addEventListener('DOMContentLoaded', () => {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const go = t => { const el = document.querySelector(t); if (el) el.scrollIntoView({ behavior: 'smooth' }); };
+  const go = t => { const el = typeof t === 'string' ? document.querySelector(t) : t; if (el) el.scrollIntoView({ behavior: 'smooth' }); };
   if (!window.gsap || !window.ScrollTrigger || reduce) { document.addEventListener('go', e => go(e.detail)); return; }
   gsap.registerPlugin(ScrollTrigger);
 
