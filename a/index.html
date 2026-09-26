@@ -291,7 +291,12 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 /* мобильная нижняя панель */
 .dock{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:30;display:none;grid-template-columns:1fr 1fr 1.2fr;gap:6px;background:rgba(20,20,23,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:20px;padding:6px}
 .dock a{display:grid;place-items:center;min-height:48px;border-radius:14px;font-weight:700;font-size:14px}
-.dock a:last-child{background:var(--red)}
+/* Переезжающая подсветка: красным горит последняя нажатая кнопка группы */
+.pick{isolation:isolate}.hero__btns.pick{position:relative}
+.pick__pill{position:absolute;left:0;top:0;z-index:-1;background:var(--red);border-radius:999px;pointer-events:none;box-shadow:0 10px 30px rgba(253,13,27,.35);transition:transform .5s cubic-bezier(.3,1.25,.5,1),width .5s cubic-bezier(.3,1.25,.5,1),height .5s}
+.dock .pick__pill{border-radius:14px;box-shadow:none}
+.pick>a{background:transparent;transition:transform .2s,border-color .3s,color .3s}
+.pick>a.on,.hero .pick>a.on{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;border-color:transparent}
 @media(max-width:760px){.dock{display:grid}}
 .demo-note{position:fixed;left:12px;top:calc(var(--nav) + 10px);z-index:20;background:#ffd166;color:#000;font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px;opacity:.9}
 
@@ -322,7 +327,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     <span class="eyebrow">Мурманск · 19 лет · 2 автосалона</span>
     <h1><span class="ln"><span>Автомобили</span></span><span class="ln"><span>с прозрачной</span></span><span class="ln"><span>историей.</span></span></h1>
     <p>Новые и с пробегом, под заказ из любой страны мира. Выкуп, кредит и страхование — в одном месте.</p>
-    <div class="hero__btns"><a class="btn" href="#catalog">Смотреть <span data-cars-count>48</span> авто</a><a class="btn btn--ghost" href="#order">Авто на заказ</a></div>
+    <div class="hero__btns pick"><a class="btn btn--ghost on" href="#catalog">Смотреть <span data-cars-count>48</span> авто</a><a class="btn btn--ghost" href="#order">Авто на заказ</a></div>
   </div>
   <div class="hero__scroll">ЛИСТАЙТЕ</div>
 </section>
@@ -419,7 +424,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 
 <footer><div class="wrap"><span>© <span data-year></span> Элвис Авто · Мурманск · <b style="color:#ffd166">демо-вариант A</b></span><span>ул. Фролова, 24А · пр-т Кольский, 27Б · 8 (8152) 25-25-50</span></div></footer>
 
-<nav class="dock"><a href="tel:+78152252550">Позвонить</a><a href="#catalog">Каталог</a><a href="#contact">Заявка</a></nav>
+<nav class="dock pick"><a href="tel:+78152252550">Позвонить</a><a href="#catalog">Каталог</a><a class="on" href="#contact">Заявка</a></nav>
 
 
 <script src="../shared/data.js"></script>
@@ -464,6 +469,22 @@ U.$('#burger').onclick = () => nav.classList.toggle('open');
 U.$$('#menu a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
 const onScroll = () => nav.classList.toggle('solid', scrollY > 40);
 addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+// Переезжающая красная подсветка в группах кнопок
+U.$$('.pick').forEach(g => {
+  const pill = document.createElement('i'); pill.className = 'pick__pill'; g.prepend(pill);
+  const links = U.$$(':scope > a', g); let cur = U.$(':scope > a.on', g) || links[0];
+  const place = anim => {
+    if (!anim) pill.style.transition = 'none';
+    pill.style.width = cur.offsetWidth + 'px'; pill.style.height = cur.offsetHeight + 'px';
+    pill.style.transform = `translate(${cur.offsetLeft}px,${cur.offsetTop}px)`;
+    links.forEach(a => a.classList.toggle('on', a === cur));
+    if (!anim) { void pill.offsetWidth; pill.style.transition = ''; }
+  };
+  links.forEach(a => a.addEventListener('click', () => { cur = a; place(true); }));
+  place(false); addEventListener('resize', () => place(false));
+  if (document.fonts) document.fonts.ready.then(() => place(false));
+});
 
 // Слова «загораются» по мере прокрутки — без библиотек, работает везде
 (function () {
